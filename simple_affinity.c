@@ -26,6 +26,9 @@
 #include <sched.h>
 #include <pthread.h>
 
+#include <sys/syscall.h>
+
+#define gettid() syscall(__NR_gettid) 
 
 void *test_thread(void *arg)
 {
@@ -58,8 +61,8 @@ void *test_thread(void *arg)
         {
             if(CPU_ISSET(loop, &mask))
             {
-                printf("test thread %d run on processor %d\n",
-                        getpid(), loop);
+                printf("test thread %lu run on processor %d\n",
+                        gettid(), loop);
             }
         }
 
@@ -90,8 +93,8 @@ void *child_thread(void *arg)
         {
             if(CPU_ISSET(loop, &mask))
             {
-                printf("child thread %d run on processor %d\n",
-                        getpid(), loop);
+                printf("child thread %lu run on processor %d\n",
+                        gettid(), loop);
             }
         }
 
@@ -160,8 +163,8 @@ int main(int argc, char *argv[])
         {
             if(CPU_ISSET(loop, &mask_get))
             {
-                printf("this processor %d is running on processor: \
-                        %d\n", getpid(), loop);
+                printf("this processor %lu is running on processor: \
+                        %d\n", gettid(), loop);
             }
         }
 
